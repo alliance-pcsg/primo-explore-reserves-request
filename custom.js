@@ -13,6 +13,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
   controller: function controller($scope, $http, $element, dataService, $mdDialog, reserveRequestOptions) {
 
     var formatBlacklist = reserveRequestOptions.formatBlacklist;
+    $scope.instCode=reserveRequestOptions.instCode;
 
     this.$onInit = function () {
       $scope.displayRequestLink = false;
@@ -31,7 +32,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       var userGroup = dataService.getUserGroup($scope);
       //console.log("item:");
       //console.log($scope.$parent.$parent.$parent.$parent.$ctrl.item);
-      var valid = dataService.doesLCCown($scope);
+      var valid = dataService.doesLibraryOwn($scope);
       var userGroupWhitelist=reserveRequestOptions.userGroupWhitelist;
       var userCheck = userGroupWhitelist.indexOf(userGroup);
       if (userCheck > 0 && valid == true && okFormat == true) {
@@ -114,14 +115,16 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       }
       return mmsid;
     },
-    doesLCCown: function doesLCCown($scope) {
+    doesLibraryOwn: function doesLibraryOwn($scope) {
 
       var insts = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.delivery.institution;
       console.log(insts);
-      var check = insts.indexOf("LCC");
+
+      console.log($scope.instCode);
+      var check = insts.indexOf($scope.instCode);
       console.log(check);
       var second = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.browse.institution;
-      var check2 = second.indexOf("LCC");
+      var check2 = second.indexOf($scope.instCode);
       console.log(check2);
       if (check == "-1" && check2 == "-1") {
         return false;
@@ -215,16 +218,16 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
 }]);
 
 app.constant('reserveRequestOptions', {
-  formatBlacklist : ["journal", "ebook"],
-  userGroupWhitelist : [2,3],
+  instCode : "LCC", /* code of your library  */
+  formatBlacklist : ["journal", "ebook"],  /* formats for which this will not appear  */
+  userGroupWhitelist : [2,3],   /* array of whitelisted group members who will see this when authenticated    */
   selectProps : {
-    //"type": "select",  /*  this seems unnecessary */
-    //"name": "loanperiod", /*  this seems unnecessary */
-    "value": "3 hours", /* initial default value  */
-    "values": ["3 hours", "1 day", "3 days"],
-    "loanRule" : "3 hours"
+    "value": "3 hours", /* initial default text display in select menu  */
+    "values": ["3 hours", "1 day", "3 days"], /* pulldown menu options for loan periods*/
+    "loanRule" : "3 hours" /* defaut select value for <option> value*/
   },
-  targetUrl : "https://watzek.lclark.edu/src/prod/reservesRequestTesting.php" /* URL to send data to, for emailing, etc.*/
+  targetUrl : "https://watzek.lclark.edu/src/prod/reservesRequestTesting.php", /* URL to send data to, for emailing, etc.*/
+
 });
 /*
 $scope.prop = {
