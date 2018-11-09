@@ -5,20 +5,21 @@
 var app = angular.module('viewCustom', ['reservesRequest']);
 
 
-
-
-
 angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
   bindings: { parentCtrl: '<' },
   controller: function controller($scope, $http, $element, dataService, $mdDialog, reserveRequestOptions) {
 
     var formatBlacklist = reserveRequestOptions.formatBlacklist;
     $scope.instCode=reserveRequestOptions.instCode;
+    $scope.primoDomain=reserveRequestOptions.primoDomain;
+    $scope.primoVid=reserveRequestOptions.primoVid;
+    $scope.primoScope=reserveRequestOptions.primoScope;
+    $scope.successMessage=reserveRequestOptions.successMessage;
+    $scope.failureMessage=reserveRequestOptions.failureMessage;
 
     this.$onInit = function () {
       $scope.displayRequestLink = false;
       $scope.required = true;
-
       $scope.format = dataService.getFormat($scope);
 
       var formatCheck = formatBlacklist.indexOf($scope.format);
@@ -28,10 +29,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
         var okFormat = true;
       }
 
-
       var userGroup = dataService.getUserGroup($scope);
-      //console.log("item:");
-      //console.log($scope.$parent.$parent.$parent.$parent.$ctrl.item);
       var valid = dataService.doesLibraryOwn($scope);
       var userGroupWhitelist=reserveRequestOptions.userGroupWhitelist;
       var userCheck = userGroupWhitelist.indexOf(userGroup);
@@ -44,8 +42,6 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
         $scope.loanRule=reserveRequestOptions.selectProps.loanRule;
 
       }
-      //  $scope.mmsID=dataService.getMMSid($scope);
-      // $scope.callNumber=dataService.getCallNumber($scope);
 
     };
     $scope.showSelectValue = function (mySelect) {
@@ -53,8 +49,15 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       $scope.loanRule = mySelect;
     };
 
-    $scope.submitRequest = function () {
+    $scope.checkFormVals = function() {
+      if (sessionStorage.course && sessionStorage.course !="undefined"){$scope.course = sessionStorage.course;};
+      if (sessionStorage.courseTitle && sessionStorage.courseTitle !="undefined"){$scope.courseTitle = sessionStorage.courseTitle;};
 
+    }
+
+    $scope.submitRequest = function () {
+      sessionStorage.course=$scope.course;
+      sessionStorage.courseTitle=$scope.courseTitle;
       console.log("request");
       $scope.title = dataService.getTitle($scope);
       $scope.author = dataService.getAuthor($scope);
@@ -63,8 +66,8 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       $scope.url = dataService.getUrl($scope);
       $scope.availability = dataService.getAvailability($scope);
 
-      console.log($scope);
-      console.log($element);
+      //console.log($scope);
+      //console.log($element);
       var title = $scope.title;
       var req = {
         method: 'POST',
@@ -88,18 +91,16 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       };
 
       $http(req).then(function successCallback(response) {
-        console.log(response);
-
-        $element.find('md-card').html(response.data);
+        $element.find('md-card').html($scope.successMessage);
         // this callback will be called asynchronously
         // when the response is available
       }, function errorCallback(response) {
-        console.log(response);
-        $element.find('md-card').html(response.data);
+
+        $element.find('md-card').html($scope.failureMessage);
       });
     };
   },
-  template: '<div ng-click="isReplyFormOpen = !isReplyFormOpen" ng-show=\'{{displayRequestLink}}\' style=\'margin-bottom:10px;\'>\n    <span style=\'color: #883300;font-weight: bold;font-size: 100%;font-size:15px;margin-left: 10px;margin-right:15px;\'>COURSE RESERVES: </span>\n    <a     style=\'font-weight: bold;\n    font-size: 100%;\n    color: #1c62a8;\n    padding: 5px 7px;\n    -moz-border-radius: 1em;\n    border-radius: 1em;\n    line-height: 1.3em;\n    background: #f5f5f5;\n    border: solid 1px #ddd;\n    height: 30px;\n    margin-left: 5px;\n    margin-right: 5px;\'\'>Place on Reserve</a></div>\n\n     <md-card style=\'background-color:#e6e6e6;margin-bottom:50px;\' ng-init="isReplyFormOpen = false" ng-show="isReplyFormOpen" id="replyForm">\n        <md-card-title>\n          <md-card-title-text>\n            <span class="md-headline">Place item on reserve</span>\n          </md-card-title-text>\n        </md-card-title>\n\n        <md-content md-theme="docs-dark" layout-gt-sm="row">\n\t\t\t<div layout="column" layout-padding>\n\t\t\t\t<div flex>Course: <input type=\'text\' ng-model=\'course\' style=\'border-bottom: 1px solid gray\' size=\'50\' placeholder=\'e.g. ART 101\' required></div>\n\t\t\t\t<div flex>Course Title: <input type=\'text\' ng-model=\'courseTitle\' style=\'border-bottom: 1px solid gray\' size=\'50\' placeholder=\'e.g. Intro to Art\' required></div>\n\t\t\t\t<div flex>Loan Period:  <span >\n\t\t\t\t  <select ng-model="prop.value" ng-change="showSelectValue(prop.value)" ng-options="v for v in prop.values">\n\t\t\t\t  </select>\n\t\t\t\t</span>\n\t\t\t\t</div>\n        <div flex>Comments: <textarea ng-model=\'comments\'></textarea></div>\n\t\t\t</div>\n\n         </md-content>\n        <md-card-actions layout="row" layout-align="left center">\n          <md-button ng-click=\'submitRequest(mySelect)\' class="rreq md-raised">Place item on reserve</md-button>\n\n        </md-card-actions>\n      </md-card>'
+  template: '<div ng-init="checkFormVals()" ng-click="isReplyFormOpen = !isReplyFormOpen" ng-show=\'{{displayRequestLink}}\' style=\'margin-bottom:10px;\'>\n    <span style=\'color: #883300;font-weight: bold;font-size: 100%;font-size:15px;margin-left: 10px;margin-right:15px;\'>COURSE RESERVES: </span>\n    <a     style=\'font-weight: bold;\n    font-size: 100%;\n    color: #1c62a8;\n    padding: 5px 7px;\n    -moz-border-radius: 1em;\n    border-radius: 1em;\n    line-height: 1.3em;\n    background: #f5f5f5;\n    border: solid 1px #ddd;\n    height: 30px;\n    margin-left: 5px;\n    margin-right: 5px;\'\'>Place on Reserve</a></div>\n\n     <md-card style=\'background-color:#e6e6e6;margin-bottom:50px;\' ng-init="isReplyFormOpen = false" ng-show="isReplyFormOpen" id="replyForm">\n        <md-card-title>\n          <md-card-title-text>\n            <span class="md-headline">Place item on reserve</span>\n          </md-card-title-text>\n        </md-card-title>\n\n        <md-content md-theme="docs-dark" layout-gt-sm="row">\n\t\t\t<div layout="column" layout-padding>\n\t\t\t\t<div flex>Course: <input type=\'text\' ng-model=\'course\' style=\'border-bottom: 1px solid gray\' size=\'50\' placeholder=\'e.g. ART 101\' ng-value="course" required> </div>\n\t\t\t\t<div flex>Course Title: <input type=\'text\' ng-model=\'courseTitle\' style=\'border-bottom: 1px solid gray\' size=\'50\' placeholder=\'e.g. Intro to Art\' required></div>\n\t\t\t\t<div flex>Loan Period:  <span >\n\t\t\t\t  <select ng-model="prop.value" ng-change="showSelectValue(prop.value)" ng-options="v for v in prop.values">\n\t\t\t\t  </select>\n\t\t\t\t</span>\n\t\t\t\t</div>\n        <div flex>Comments: <textarea ng-model=\'comments\'></textarea></div>\n\t\t\t</div>\n\n         </md-content>\n        <md-card-actions layout="row" layout-align="left center">\n          <md-button ng-click=\'submitRequest(mySelect)\' class="rreq md-raised">Place item on reserve</md-button>\n\n        </md-card-actions>\n      </md-card>'
 }).factory('dataService', ['$http', function ($http) {
   return {
     getMMSid: function getMMSid($scope) {
@@ -108,7 +109,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       for (var i = 0; i < mms.length; i++) {
         //console.log(mms[i]);
         var pieces = mms[i].split("$$I");
-        if (pieces[1] == "LCC") {
+        if (pieces[1] == $scope.instCode) {
           var mmsid = pieces[0];
           $scope.mmsid = mmsid;
         }
@@ -118,9 +119,6 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
     doesLibraryOwn: function doesLibraryOwn($scope) {
 
       var insts = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.delivery.institution;
-      console.log(insts);
-
-      console.log($scope.instCode);
       var check = insts.indexOf($scope.instCode);
       console.log(check);
       var second = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.browse.institution;
@@ -140,9 +138,12 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
         var calls = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.browse.callnumber;
         for (var i = 0; i < calls.length; i++) {
           var parts = calls[i].split("$$");
-          //console.log(parts);
-          if (parts[1] == "ILCC") {
+          console.log("parts:")
+          console.log(parts);
+          var partCheck="I"+$scope.instCode;
+          if (parts[1] == partCheck) {
             var callNumber = parts[2].substring(1);
+            console.log("exception");
           }
         }
       }
@@ -186,7 +187,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
     getUrl: function getUrl($scope) {
 
       var docid = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.control.recordid[0];
-      var url = "http://primo.lclark.edu/primo-explore/fulldisplay?docid=" + docid + "&context=L&vid=LCC&search_scope=lcc_local&tab=default_tab&lang=en_US";
+      var url = "http://"+ $scope.primoDomain+"/primo-explore/fulldisplay?docid=" + docid + "&context=L&vid="+$scope.primoVid+"&search_scope="+$scope.primoScope+"&tab=default_tab&lang=en_US";
       return url;
     },
     getAvailability: function getAvailability($scope) {
@@ -227,17 +228,12 @@ app.constant('reserveRequestOptions', {
     "loanRule" : "3 hours" /* defaut select value for <option> value*/
   },
   targetUrl : "https://watzek.lclark.edu/src/prod/reservesRequestTesting.php", /* URL to send data to, for emailing, etc.*/
-
+  successMessage : "<md-card style='background-color:#e6e6e6;'><md-card-content><p>Your request has been placed. Watzek Library Access Services staff will aim to place the item on reserve within 24 hours. Items that are checked out will be recalled and placed on reserves as soon as possible. If you have questions, please email reserves@lclark.edu, or contact the Service Desk at 503-768-7270.</p></md-card-content></md-card>",
+  failureMessage : "<md-card style='background-color:#e6e6e6;'><md-card-content><p>We're sorry, an error occurred. Please let us know at reserves@lclark.edu, or contact the Service Desk at 503-768-7270.</p></md-card-content></md-card>",
+  primoDomain : "primo.lclark.edu",
+  primoVid : "LCC",
+  primoScope : "lcc_local"
 });
-/*
-$scope.prop = {
-  "type": "select",
-  "name": "loanperiod",
-  "value": "3 hours",
-  "values": ["3 hours", "1 day", "3 days"],
 
-};
-$scope.loanRule = "3 hours";
-*/
 
 })();
