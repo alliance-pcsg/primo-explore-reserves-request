@@ -13,7 +13,7 @@ app.constant('reserveRequestOptions', {
     "values": ["3 hours", "1 day", "3 days"], // pulldown menu options for loan periods
     "loanRule" : "3 hours" // defaut select value for <option> value
   },
-  targetUrl : "https://watzek.lclark.edu/src/prod/reservesRequestTesting.php", // URL to send data to, for emailing, etc.
+  targetUrl : "https://myserver.com/process.php", // URL to send data to, for emailing, etc.
   successMessage : "<md-card style='background-color:#e6e6e6;'><md-card-content><p>Your request has been placed. Watzek Library Access Services staff will aim to place the item on reserve within 24 hours. Items that are checked out will be recalled and placed on reserves as soon as possible. If you have questions, please email reserves@lclark.edu, or contact the Service Desk at 503-768-7270.</p></md-card-content></md-card>",
   failureMessage : "<md-card style='background-color:#e6e6e6;'><md-card-content><p>We're sorry, an error occurred. Please let us know at reserves@lclark.edu, or contact the Service Desk at 503-768-7270.</p></md-card-content></md-card>",
   primoDomain : "primo.lclark.edu", //to help create a permalink to the record in the email message
