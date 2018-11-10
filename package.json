@@ -1,0 +1,24 @@
+{
+  "name": "@orbis-cascade/primo-explore-reserves-request",
+  "version": "1.0.0",
+  "description": "Lets users send requests for course reserves directly from the catalog.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alliance-pcsg/primo-explore-reserves-request.git"
+  },
+  "keywords": [
+    "primo",
+    "course",
+    "reserves"
+  ],
+  "author": "Jeremy McWilliams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alliance-pcsg/primo-explore-reserves-request/issues"
+  },
+  "homepage": "https://github.com/alliance-pcsg/primo-explore-reserves-request#readme"
+}
