@@ -6,7 +6,7 @@
 Allows users to submit requests for course reserves directly from the Primo catalog. Requires a server side php file to receive the request from Primo, and send as email to reserves staff. Within the app.constant options, you can indicate which user groups will see the request option.
 
 ### Screenshot
-![screenshot](screenshot.png)
+![screenshot](https://github.com/alliance-pcsg/primo-explore-reserves-request/blob/master/screenshot.png?raw=true)
 
 ## Install
 1. Make sure you've installed and configured [primo-explore-devenv](https://github.com/ExLibrisGroup/primo-explore-devenv).
