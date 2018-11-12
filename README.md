@@ -34,7 +34,7 @@ Note: If you're using the `--browserify` build option, you will need to first im
 ```javascript
 import 'primo-explore-reserves-request';
 ```
-You can configure the options available by passing an array of search target objects. Each object needs five properties:
+You can configure this customization by passing the following options via reserveRequestOptions (a full example is at the bottom of [this file](https://github.com/alliance-pcsg/primo-explore-reserves-request/blob/master/example/custom.js).) :
 
 | param     | type         | usage                                                                                                                |
 |-----------|--------------|----------------------------------------------------------------------------------------------------------------------|
