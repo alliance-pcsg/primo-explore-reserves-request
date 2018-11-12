@@ -1,6 +1,6 @@
 {
   "name": "@orbis-cascade/primo-explore-reserves-request",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Lets users send requests for course reserves directly from the catalog.",
   "main": "index.js",
   "scripts": {
