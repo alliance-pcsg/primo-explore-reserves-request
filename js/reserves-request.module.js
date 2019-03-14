@@ -205,7 +205,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       var uSMS = rootScope.$$childHead.$ctrl.userSessionManagerService;
       var jwtData = uSMS.jwtUtilService.getDecodedToken();
       console.log(jwtData);
-      var userGroup = parseInt(jwtData.userGroup);
+      var userGroup = jwtData.userGroup;
       return userGroup;
     }
   };

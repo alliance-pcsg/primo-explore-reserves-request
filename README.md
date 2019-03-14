@@ -48,3 +48,26 @@ You can configure this customization by passing the following options via reserv
 | `primoDomain` | string     | Domain of your primo instance (e.g. primo.lclark.edu). Used to generate permalink for staff. |
 | `primoVid` | string     | VID of your Primo view. Used to generate permalink for staff. |
 | `primoScope` | string     | Primo scope. Used to generate permalink for staff. |
+
+
+For example:
+```
+
+/* edit these below to fit your local environment */
+app.constant('reserveRequestOptions', {
+  instCode : "LCC", /* code of your library  */
+  formatBlacklist : ["journal", "ebook"],  /* formats for which this will not appear  */
+  userGroupWhitelist : ["2","3","anotherGroup"],   /* array of whitelisted group members who will see this when authenticated    */
+  selectProps : {
+    "value": "3 hours", /* initial default text display in select menu  */
+    "values": ["3 hours", "1 day", "3 days"], /* pulldown menu options for loan periods*/
+    "loanRule" : "3 hours" /* defaut select value for <option> value*/
+  },
+  targetUrl : "https://mylibrary.edu/process.php", /* URL to send data to, for emailing, etc.*/
+  successMessage : "<md-card style='background-color:#e6e6e6;'><md-card-content><p>Your request has been placed. Watzek Library Access Services staff will aim to place the item on reserve within 24 hours. Items that are checked out will be recalled and placed on reserves as soon as possible. If you have questions, please email reserves@lclark.edu, or contact the Service Desk at 503-768-7270.</p></md-card-content></md-card>",
+  failureMessage : "<md-card style='background-color:#e6e6e6;'><md-card-content><p>We're sorry, an error occurred. Please let us know at reserves@lclark.edu, or contact the Service Desk at 503-768-7270.</p></md-card-content></md-card>",
+  primoDomain : "primo.lclark.edu",
+  primoVid : "LCC",
+  primoScope : "lcc_local"
+});
+```

@@ -7,7 +7,6 @@
 
 var app = angular.module('viewCustom', ['reservesRequest']);
 
-
 angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
   bindings: { parentCtrl: '<' },
   controller: function controller($scope, $http, $element, dataService, $mdDialog, reserveRequestOptions) {
@@ -215,7 +214,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       var uSMS = rootScope.$$childHead.$ctrl.userSessionManagerService;
       var jwtData = uSMS.jwtUtilService.getDecodedToken();
       console.log(jwtData);
-      var userGroup = parseInt(jwtData.userGroup);
+      var userGroup = jwtData.userGroup;
       return userGroup;
     }
   };
@@ -225,7 +224,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
 app.constant('reserveRequestOptions', {
   instCode : "LCC", /* code of your library  */
   formatBlacklist : ["journal", "ebook"],  /* formats for which this will not appear  */
-  userGroupWhitelist : [2,3],   /* array of whitelisted group members who will see this when authenticated    */
+  userGroupWhitelist : ["2","3"],   /* array of whitelisted group members who will see this when authenticated    */
   selectProps : {
     "value": "3 hours", /* initial default text display in select menu  */
     "values": ["3 hours", "1 day", "3 days"], /* pulldown menu options for loan periods*/
