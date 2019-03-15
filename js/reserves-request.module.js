@@ -26,7 +26,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       var valid = dataService.doesLibraryOwn($scope);
       var userGroupWhitelist=reserveRequestOptions.userGroupWhitelist;
       var userCheck = userGroupWhitelist.indexOf(userGroup);
-      if (userCheck > 0 && valid == true && okFormat == true) {
+      if (userCheck >= 0 && valid == true && okFormat == true) {
 
         $scope.displayRequestLink = true;
         $scope.instructor = dataService.getInstructor($scope);
