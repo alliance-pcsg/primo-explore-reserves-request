@@ -2,7 +2,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
   bindings: { parentCtrl: '<' },
   controller: function controller($scope, $http, $element, dataService, $mdDialog, reserveRequestOptions) {
 
-    var formatBlacklist = reserveRequestOptions.formatBlacklist;
+    var formatDenyList = reserveRequestOptions.formatDenyList;
     $scope.instCode=reserveRequestOptions.instCode;
     $scope.primoDomain=reserveRequestOptions.primoDomain;
     $scope.primoVid=reserveRequestOptions.primoVid;
@@ -11,11 +11,15 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
     $scope.failureMessage=reserveRequestOptions.failureMessage;
 
     this.$onInit = function () {
+
+      console.log("RESERVES");
+      console.log($scope);
+
       $scope.displayRequestLink = false;
       $scope.required = true;
       $scope.format = dataService.getFormat($scope);
 
-      var formatCheck = formatBlacklist.indexOf($scope.format);
+      var formatCheck = formatDenyList.indexOf($scope.format);
       if (formatCheck >= 0) {
         var okFormat = false;
       } else {
@@ -24,7 +28,7 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
 
       var userGroup = dataService.getUserGroup($scope);
       var valid = dataService.doesLibraryOwn($scope);
-      var userGroupWhitelist=reserveRequestOptions.userGroupWhitelist;
+      var userGroupWhitelist=reserveRequestOptions.userGroupAllowedlist;
       var userCheck = userGroupWhitelist.indexOf(userGroup);
       if (userCheck >= 0 && valid == true && okFormat == true) {
 
