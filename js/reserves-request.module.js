@@ -73,9 +73,12 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       $scope.title = dataService.getTitle($scope);
       $scope.author = dataService.getAuthor($scope);
       if($scope.cdiCheck==false){$scope.callNumber = dataService.getCallNumber($scope);}
+      else{$scope.callNumber="N/A";}
       if($scope.cdiCheck==false){$scope.location = dataService.getLocation($scope);}
+      else{$scope.location="N/A";}
       $scope.url = dataService.getUrl($scope);
       if($scope.cdiCheck==false){$scope.availability = dataService.getAvailability($scope);}
+      else{$scope.availability="Electronic record";}
 
       //console.log($scope);
       //console.log($element);
