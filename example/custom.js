@@ -10,6 +10,7 @@ var app = angular.module('viewCustom', ['reservesRequest']);
 angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
   bindings: { parentCtrl: '<' },
   controller: function controller($scope, $http, $element, dataService, $mdDialog, reserveRequestOptions) {
+    console.log($scope);
 
     var formatDenyList = reserveRequestOptions.formatDenyList;
     $scope.instCode=reserveRequestOptions.instCode;
@@ -21,8 +22,20 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
 
     this.$onInit = function () {
 
-      console.log("RESERVES");
-      console.log($scope);
+      var cdiCheck=dataService.isCdi($scope);
+      $scope.cdiCheck=cdiCheck;
+
+      //determines section
+      var scrollId=dataService.getScrollId($scope);
+      console.log(scrollId);
+
+      // determines delivery category
+      var deliveryCategory=dataService.getDeliveryCategory($scope);
+      console.log(deliveryCategory);
+
+      //hopefully this is effective- displays in 'view it' for print, 'get it' for electronic
+      if(deliveryCategory=="Alma-P"){var scrollIdMatch="getit_link1_0";}
+      else{var scrollIdMatch="getit_link2";}
 
       $scope.displayRequestLink = false;
       $scope.required = true;
@@ -36,10 +49,11 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
       }
 
       var userGroup = dataService.getUserGroup($scope);
-      var valid = dataService.doesLibraryOwn($scope);
-      var userGroupWhitelist=reserveRequestOptions.userGroupAllowedlist;
-      var userCheck = userGroupWhitelist.indexOf(userGroup);
-      if (userCheck >= 0 && valid == true && okFormat == true) {
+      if($scope.cdiCheck==false){var valid = dataService.doesLibraryOwn($scope);}
+      var userGroupAllowedlist=reserveRequestOptions.userGroupAllowedlist;
+      var userCheck = userGroupAllowedlist.indexOf(userGroup);
+
+      if ((userCheck >= 0 && valid == true && okFormat == true && scrollId==scrollIdMatch) || (userCheck>=0 && $scope.cdiCheck==true && okFormat==true && scrollId==scrollIdMatch)) {
 
         $scope.displayRequestLink = true;
         $scope.instructor = dataService.getInstructor($scope);
@@ -64,13 +78,13 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
     $scope.submitRequest = function () {
       sessionStorage.course=$scope.course;
       sessionStorage.courseTitle=$scope.courseTitle;
-      console.log("request");
+      //console.log("request");
       $scope.title = dataService.getTitle($scope);
       $scope.author = dataService.getAuthor($scope);
-      $scope.callNumber = dataService.getCallNumber($scope);
-      $scope.location = dataService.getLocation($scope);
+      if($scope.cdiCheck==false){$scope.callNumber = dataService.getCallNumber($scope);}
+      if($scope.cdiCheck==false){$scope.location = dataService.getLocation($scope);}
       $scope.url = dataService.getUrl($scope);
-      $scope.availability = dataService.getAvailability($scope);
+      if($scope.cdiCheck==false){$scope.availability = dataService.getAvailability($scope);}
 
       //console.log($scope);
       //console.log($element);
@@ -121,6 +135,25 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
         }
       }
       return mmsid;
+    },
+    isCdi: function isCdi($scope){
+
+      var pnx= $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx;
+      var recordid=pnx.control.recordid[0];
+      var pieces = recordid.split("_");
+      var verdict=pieces.includes("cdi");
+      return verdict;
+
+    },
+    getScrollId: function getScrollId($scope){
+      var scrollId=$scope.$parent.$parent.$parent.$ctrl.service.scrollId;
+      return scrollId;
+    },
+    getDeliveryCategory: function getDeliveryCategory($scope){
+      var deliveryCategory=$scope.$parent.$parent.$parent.$parent.$ctrl.item.delivery.deliveryCategory[0];
+      console.log($scope.$parent.$parent.$parent.$parent.$ctrl.item);
+      return deliveryCategory;
+
     },
     doesLibraryOwn: function doesLibraryOwn($scope) {
 
@@ -192,8 +225,12 @@ angular.module('reservesRequest', []).component('prmLoginAlmaMashupAfter', {
     },
     getUrl: function getUrl($scope) {
 
+      if($scope.cdiCheck==false){var context="L";}
+      else{var context="PC";}
+
+
       var docid = $scope.$parent.$parent.$parent.$parent.$ctrl.item.pnx.control.recordid[0];
-      var url = "http://"+ $scope.primoDomain+"/primo-explore/fulldisplay?docid=" + docid + "&context=L&vid="+$scope.primoVid+"&search_scope="+$scope.primoScope+"&tab=default_tab&lang=en_US";
+      var url = "http://"+ $scope.primoDomain+"/primo-explore/fulldisplay?docid=" + docid + "&context="+context+"&vid="+$scope.primoVid+"&search_scope="+$scope.primoScope+"&tab=default_tab&lang=en_US";
       return url;
     },
     getAvailability: function getAvailability($scope) {
