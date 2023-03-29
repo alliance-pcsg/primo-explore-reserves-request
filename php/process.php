@@ -1,10 +1,12 @@
 <?php
 
 /* This script receives the JSON object from Primo, and sends an email to staff     */
-/*  Customize lines 22-37 as necessary. At minimum, edit lines 22 & 23 with appropriate email addresses */
+/*  Customize lines 24-39 as necessary. At minimum, edit lines 22 & 23 with appropriate email addresses */
 
 	$postdata = file_get_contents("php://input");
 	$request = json_decode($postdata);
+	# if no data is received, return error.
+        if(!isset($request){header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);}
 	$title=$request->title;
 	$author=$request->author;
 	$course=$request->course;
